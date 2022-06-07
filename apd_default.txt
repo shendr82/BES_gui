@@ -1,0 +1,7 @@
+1.2		;rv_set [m]: viewing radius
+250.0		;apd_bias [V]: APD bias voltage
+5.0e-7		;apd_interval [sec]: sampling interval
+0.6		;apd_duration [sec]: Digitisation duratin
+-0.1		;apd_start [sec]: BES start time
+1		;default camera
+69		;plus egy
