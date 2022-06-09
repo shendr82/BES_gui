@@ -1,7 +1,11 @@
-1.2		;rv_set [m]: viewing radius
-250.0		;apd_bias [V]: APD bias voltage
-5.0e-7		;apd_interval [sec]: sampling interval
-0.6		;apd_duration [sec]: Digitisation duratin
+1.2		;apd_duration [sec]: Digitisation duratin
+2.0		;frequency [MHz]
+350.0		;apd_bias [V]: APD bias voltage
+400.0		;apd_bias 2 [V]: APD bias 2 voltage
+20.0		;temperature [C]
+0.0		;trigger delay [us]
+1.2		;rv_set [m] radius
+35.0		;filter temperature
 -0.1		;apd_start [sec]: BES start time
 1		;default camera
-69		;plus egy
+

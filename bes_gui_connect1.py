@@ -15,17 +15,18 @@ file. This XML file is then used to set up the APDCAM for the next measurement.
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QVBoxLayout, QDialog, QMessageBox, QSystemTrayIcon
+# from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import QVBoxLayout, QDialog, QMessageBox, QSystemTrayIcon
 
 from bes_gui1 import Ui_MainWindow
 
-from pathlib import Path
+# from pathlib import Path
 import xml.etree.ElementTree as ET
 
 # import numpy as np
 import os
-import traceback, sys
+import subprocess
+import sys
 from datetime import datetime
 
 
@@ -59,40 +60,97 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textBrowser.ensureCursorVisible()
         self.textBrowser.setAlignment(QtCore.Qt.AlignLeft)
         self.textBrowser.append(write)
-        self.textBrowser.append('')
+        # self.textBrowser.append('')
 
 
         # Getting entered values from GUI
     def get_values(self):
-        length = self.length_line.text()
-        freq = self.freq_line.text()
-        bias_1 = self.bias_v_1_line.text()
-        bias_2 = self.bias_v_2_line.text()
-        temp = self.temp_line.text()
-        trigger = self.trigger_line.text()
+        try:
+            length = eval(self.length_line.text())
+            freq = eval(self.freq_line.text())
+            bias_1 = eval(self.bias_v_1_line.text())
+            bias_2 = eval(self.bias_v_2_line.text())
+            temp = eval(self.temp_line.text())
+            trigger = eval(self.trigger_line.text())
+            
+            # radius = eval(self.bes_radius_line.text())
+            # filter_temp = eval(self.filter_temp_line.text())
+            
+            print(length, freq, bias_1, bias_2, temp, trigger)
+            print(type(length))
+            
+        except Exception as e:
+            self.logbook('Exeption error message:', text_color="#ff0000")
+            self.logbook(f'--  {str(e)}  --', text_color='#800080')
+            
+        if 0.1 <= length <= 10:
+            length = length
+            print(length)
+        else:
+            raise Exception('Interval error! XML file not saved')
+            
+        if 0.1 <= freq <= 4:
+            freq = round(1/freq, 3)*1e-6
+            print(freq)
+        else:
+            raise Exception('Interval error! XML file not saved')
         
-        radius = self.bes_radius_line.text()
-        filter_temp = self.filter_temp_line.text()
+        if 350 <= bias_1 <= 450:
+            bias_1 = bias_1
+            print(bias_1)
+        else:
+            raise Exception('Interval error! XML file not saved')
+            
+        if 350 <= bias_2 <= 450:
+            bias_2 = bias_2
+            print(bias_2)
+        else:
+            raise Exception('Interval error! XML file not saved')
         
-        return [length, freq, bias_1, bias_2, temp, trigger, radius, filter_temp]
+        if 15 <= temp <= 30:
+            temp = temp
+            print(temp)
+        else:
+            raise Exception('Interval error! XML file not saved')
+        
+        if 0 <= trigger <= 1e7:
+            trigger = trigger
+            print(trigger)
+        else:
+            raise Exception('Interval error! XML file not saved')
+        
+        return [length, freq, bias_1, bias_2, temp, trigger]
+    
+    
+    
+    def calc_mirror(self, radius):
+         
+        y = 'majd ide jon egy function'
+        return str(y)
     
     
         # Saving parameter values in XML file
     def save_xml(self):
         try:
             values = self.get_values()
+            print(f'Values: {values}')
             now = datetime.now()
-            tree = tree = ET.parse('new_values.xml')
+            tree = tree = ET.parse('abes_gui_test.xml')
             root = tree.getroot()
             
-            serial = root[0].set('serial', values[0])
-            maxspeed = root[1][0].set('maxSpeed', values[1])
-            timeout = root[4][0].set('timeOut', values[2])
+            length = root[0].set('duration', str(values[0]))
+            freq = root[0].set('interval', str(values[1]))
+            bias_1 = root[0].set('apd_bias_1', str(values[2]))
+            bias_2 = root[0].set('apd_bias_2', str(values[3]))
+            temp = root[0].set('temperature', str(values[4]))
+            trigger = root[0].set('apd_trig_delay', str(values[5]))
+            
+            # radius = eval(self.bes_radius_line.text())
+            # filter_temp = root[5].set('temperature', values[7])
             
             file = ET.ElementTree(root)
-            file.write('new_values.xml')
+            file.write('abes_gui_test.xml')
             
-            print(f'serial: {values[0]}\nmaxspeed: {values[1]}\ntimeout: {values[2]} ')
             self.logbook(f'Entered parameters are saved in XML  -----  @ {str(now)}')
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
@@ -102,15 +160,27 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # Loading parameter values from XML file
     def load_xml(self):
         try:
-            tree = tree = ET.parse('new_values.xml')
+            tree = tree = ET.parse('abes_gui_test.xml')
             root = tree.getroot()
             
-            serial = root[0].get('serial')
-            maxspeed = root[1][0].get('maxSpeed')
-            timeout = root[4][0].get('timeOut')
+            length = root[0].get('duration')
+            freq = root[0].get('interval')
+            # freq1 = freq.removesuffix('e-07')
+            freq1 = str(round(1e-6/eval(freq),1))
+            bias_1 = root[0].get('apd_bias_1')
+            bias_2 = root[0].get('apd_bias_2')
+            temp = root[0].get('temperature')
+            trigger = root[0].get('apd_trig_delay')
             
-            temp = self.temp_line.setText(serial)
-            trigger = self.trigger_line.setText(maxspeed)
+            self.length_line.setText(length)
+            self.freq_line.setText(freq1)
+            self.bias_v_1_line.setText(bias_1)
+            self.bias_v_2_line.setText(bias_2)
+            self.temp_line.setText(temp)
+            self.trigger_line.setText(trigger)
+            
+            # temp = self.temp_line.setText(serial)
+            # trigger = self.trigger_line.setText(maxspeed)
             
             print('Previous parameters are loaded\n')
             self.logbook('Previous parameters are loaded')
@@ -145,15 +215,23 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # Run open XML file (in internet explorer)
     def open_xml(self):
-        file = 'new_values.xml'
-        os.startfile(file)
+        file = 'abes_gui_test.xml'
+        # os.startfile(file)
+        if sys.platform == 'win32':
+            os.startfile(file)
+        elif sys.platform == "linux" or sys.platform == "linux2":
+            subprocess.call(['xdg-open', file])
         self.logbook(f'XML file is opened: -- {file} --')
     
        
         # Run open Readme.txt file
     def open_readme(self):
         file = 'readme.txt'
-        os.startfile(file)
+        # os.startfile(file)
+        if sys.platform == 'win32':
+            os.startfile(file)
+        elif sys.platform == "linux" or sys.platform == "linux2":
+            subprocess.call(['xdg-open', file])
         
         
 

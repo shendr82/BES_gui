@@ -46,7 +46,7 @@ pyplot.scatter(x, y_e_abs(y))
 # define a sequence of inputs between the smallest and largest known inputs
 x_line = arange(min(x), max(x), 0.05)
 
-x=1.25
+x=0.8
 print("Ha x értéke ", x, "akkor y értéke", value_m(x, a, b,c, d))
 
 
