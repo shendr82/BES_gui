@@ -1,5 +1,5 @@
 <xbt>
-  <apdcam interval="5.0e-07" start="-0.1" duration="0.6" serial="300" apd_bias_1="250" apd_bias_2="220" temperature="36" apd_trig_delay="0" clock="External">
+  <apdcam interval="2.5e-7" start="-0.1" duration="1.1" serial="4" apd_bias_1="350" apd_bias_2="350" temperature="25" apd_trig_delay="0" clock="External">
   </apdcam>
   <mirror viewRadius="1.200" mirrorAngle="41.75">
     <motor stepsSet="74000" stepsInit="110000" maxSpeed="100" holdCurrent="40" timeOut="20" limitLow="-130000" limitHigh="117000">
@@ -31,4 +31,4 @@
         <calibration stepsRatio="-0.16000" stepsOffset="-1" />
       </encoder>
     </lens>
-<filter_temp temperature="45" /></xbt>
+<filter_temp temperature="20" /></xbt>

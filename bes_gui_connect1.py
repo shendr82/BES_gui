@@ -72,12 +72,12 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             bias_2 = eval(self.bias_v_2_line.text())
             temp = eval(self.temp_line.text())
             trigger = eval(self.trigger_line.text())
+            clock = self.clock_combo.currentText()
             
             # radius = eval(self.bes_radius_line.text())
-            # filter_temp = eval(self.filter_temp_line.text())
+            filter_temp = eval(self.filter_temp_line.text())
             
-            print(length, freq, bias_1, bias_2, temp, trigger)
-            print(type(length))
+            print(length, freq, bias_1, bias_2, temp, trigger, clock)
             
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
@@ -119,7 +119,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             raise Exception('Interval error! XML file not saved')
         
-        return [length, freq, bias_1, bias_2, temp, trigger]
+        return [length, freq, bias_1, bias_2, temp, trigger, clock]
     
     
     
@@ -144,6 +144,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             bias_2 = root[0].set('apd_bias_2', str(values[3]))
             temp = root[0].set('temperature', str(values[4]))
             trigger = root[0].set('apd_trig_delay', str(values[5]))
+            clock = root[0].set('clock', values[6])
             
             # radius = eval(self.bes_radius_line.text())
             # filter_temp = root[5].set('temperature', values[7])
@@ -198,7 +199,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         lines = open(file, 'r').readlines()
         
         values = []
-        for i in range(7):
+        for i in range(10):
             x=lines[i].split('\t')
             values.append(x[0])
         
@@ -208,6 +209,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.bias_v_2_line.setText(values[3])
         self.temp_line.setText(values[4])
         self.trigger_line.setText(values[5])
+        
+        self.bes_radius_line.setText(values[6])
+        self.filter_temp_line.setText(values[7])
         
         print('Default parameters are loaded\n')
         self.logbook('Default parameters are loaded')

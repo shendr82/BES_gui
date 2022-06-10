@@ -1,5 +1,5 @@
 <xbt>
-  <apdcam interval="5e-07" start="-0.1" duration="1.2" serial="300" apd_bias_1="350.0" apd_bias_2="400.0" temperature="20.0" apd_trig_delay="0.0" clock="External">
+  <apdcam interval="2.56e-07" start="-0.1" duration="1.1" serial="300" apd_bias_1="350" apd_bias_2="350" temperature="25" apd_trig_delay="0" clock="External">
   </apdcam>
   <mirror viewRadius="1.200" mirrorAngle="41.75">
     <motor stepsSet="74000" stepsInit="110000" maxSpeed="100" holdCurrent="40" timeOut="20" limitLow="-130000" limitHigh="117000">
