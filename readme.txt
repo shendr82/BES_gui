@@ -17,6 +17,7 @@ Comands that work on Linux scientific:
   sudo yum install python3-qt5
   sudo yum install python3-devel
   sudo pip3 install matplotlib
+  sudo pip3 install scipy
 
 
 To start BES GUI please run file:

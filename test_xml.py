@@ -22,7 +22,7 @@ import xml.etree.ElementTree as ET
 
 
 # Read XML
-tree = ET.parse('abes_parameters.xml')
+tree = ET.parse('abes_gui_test.xml')
 root = tree.getroot()
 
 # all item attributes

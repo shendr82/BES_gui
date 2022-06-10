@@ -19,6 +19,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 # from PyQt5.QtWidgets import QVBoxLayout, QDialog, QMessageBox, QSystemTrayIcon
 
 from bes_gui1 import Ui_MainWindow
+import rad_mot_enc_fit
 
 # from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -38,6 +39,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         
             # Load previous parameters from last XML
         self.load_xml()     
+        self.radius_calc = rad_mot_enc_fit
         
             # File menu button actions
         self.actionOpen_XML_file.triggered.connect(lambda: self.open_xml())
@@ -139,19 +141,39 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             values = self.get_values()
             print(f'Values: {values}')
             now = datetime.now()
+            radius = values[8]
+            
             tree = tree = ET.parse('apd_parameters.xml')
             root = tree.getroot()
             
-            root[0].set('duration', str(values[0]))              # lenght
-            root[0].set('interval', str(values[1]))              # freq
-            root[0].set('apd_bias_1', str(values[2]))            # bias_1
-            root[0].set('apd_bias_2', str(values[3]))            # bias_2
-            root[0].set('temperature', str(values[4]))           # temp
-            root[0].set('apd_trig_delay', str(values[5]))        # trigger
-            root[0].set('clock', values[6])                      # clock
             
-            root[1].set('viewRadius', str(values[8]))            # radius
-            root[5].set('temperature', str(values[7]))           # filter_temp
+            mirror_param = self.radius_calc.mirror_fit(radius)
+            camera_param = self.radius_calc.camera_fit(radius)
+            lens_param = self.radius_calc.lens_fit(radius)
+            
+            print(mirror_param)
+            print(camera_param)
+            print(lens_param)
+            
+            root[0].set('duration', str(values[0]))                 # lenght
+            root[0].set('interval', str(values[1]))                 # freq
+            root[0].set('apd_bias_1', str(values[2]))               # bias_1
+            root[0].set('apd_bias_2', str(values[3]))               # bias_2
+            root[0].set('temperature', str(values[4]))              # temp
+            root[0].set('apd_trig_delay', str(values[5]))           # trigger
+            root[0].set('clock', values[6])                         # clock
+            
+            root[1].set('viewRadius', str(values[8]))               # radius
+            root[5].set('temperature', str(values[7]))              # filter_temp
+            
+            root[1][0].set('stepsSet', str(round(mirror_param[0])))      # mirror motor
+            root[1][1].set('stepsSet', str(round(mirror_param[5])))      # mirror encoder
+            
+            root[2][0].set('stepsSet', str(round(camera_param[0])))      # camera motor
+            root[2][1].set('stepsSet', str(round(camera_param[5])))      # camera encoder
+            
+            root[4][0].set('stepsSet', str(round(lens_param[0])))        # mirror motor
+            root[4][1].set('stepsSet', str(round(lens_param[5])))        # mirror encoder
             
             file = ET.ElementTree(root)
             file.write('apd_parameters.xml')
