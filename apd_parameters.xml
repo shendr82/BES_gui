@@ -1,7 +1,7 @@
 <xbt>
-  <apdcam interval="5.0e-07" start="-0.1" duration="1.0" bias="380.000" serial="300">
+  <apdcam interval="2.63e-07" start="-0.1" duration="2.2" serial="4" apd_bias_1="352" apd_bias_2="352" temperature="27" apd_trig_delay="2" clock="Internal">
   </apdcam>
-  <mirror viewRadius="1.200" mirrorAngle="41.75">
+  <mirror viewRadius="1.4" mirrorAngle="41.75">
     <motor stepsSet="74000" stepsInit="110000" maxSpeed="100" holdCurrent="40" timeOut="20" limitLow="-130000" limitHigh="117000">
       <calibration stepsPerDegree="2216.855" stepsOffset="-19006" />
     </motor>
@@ -17,18 +17,18 @@
         <calibration stepsRatio="-0.15972" stepsOffset="-5" />
       </encoder>
     </camera>
-    <filter>
+    <backup_motor>
       <motor stepsSet="60807" maxSpeed="10000" holdCurrent="40" timeOut="10" limitLow="0" limitHigh="1000000">
         <calibration stepsPerDegree="340.107" stepsOffset="47765" />
       </motor>
       <encoder stepsTolerance="100" stepsSet="9728">
         <calibration stepsRatio="0.16004" stepsOffset="-2" />
       </encoder>
-    </filter>
+    </backup_motor>
     <lens>
       <motor stepsSet="50000" maxSpeed="5000" holdCurrent="40" timeOut="1" limitLow="-100" limitHigh="123500" />
       <encoder stepsTolerance="100" stepsSet="-8001">
         <calibration stepsRatio="-0.16000" stepsOffset="-1" />
       </encoder>
     </lens>
-</xbt>
+<filter_temp temperature="22" /></xbt>
