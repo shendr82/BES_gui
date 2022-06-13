@@ -15,16 +15,14 @@ file. This XML file is then used to set up the APDCAM for the next measurement.
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-# from PyQt5.QtCore import *
 # from PyQt5.QtWidgets import QVBoxLayout, QDialog, QMessageBox, QSystemTrayIcon
 
-from bes_gui1 import Ui_MainWindow
+from gui_dark_design import Ui_MainWindow
 import rad_mot_enc_fit
 
 # from pathlib import Path
 import xml.etree.ElementTree as ET
 
-# import numpy as np
 import os
 import subprocess
 import sys
@@ -36,6 +34,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        # self.setFixedSize(1500, 1000)
+        # self.resize(1400, 960)
         
             # Load previous parameters from last XML
         self.load_xml()     
@@ -50,10 +50,33 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_button.clicked.connect(lambda: self.load_xml())
         self.load_default_button.clicked.connect(lambda: self.default_val())
         self.exit_button.clicked.connect(lambda: self.close())
+        
+        line_list = ['bes_radius_line', 
+                     'bias_v_1_line', 
+                     'bias_v_2_line', 
+                     'filter_temp_line', 
+                     'freq_line', 
+                     'length_line', 
+                     'line', 
+                     'line_2', 
+                     'mast_trigger_line', 
+                     'temp_line', 
+                     'trigger_line']
+        
+            # Enter pressesd actions
+        self.length_line.returnPressed.connect(lambda: self.save_xml())
+        self.freq_line.returnPressed.connect(lambda: self.save_xml())
+        self.bias_v_1_line.returnPressed.connect(lambda: self.save_xml())
+        self.bias_v_2_line.returnPressed.connect(lambda: self.save_xml())
+        self.temp_line.returnPressed.connect(lambda: self.save_xml())
+        self.trigger_line.returnPressed.connect(lambda: self.save_xml())
+        self.bes_radius_line.returnPressed.connect(lambda: self.save_xml())
+        self.filter_temp_line.returnPressed.connect(lambda: self.save_xml())
+        self.mast_trigger_line.returnPressed.connect(lambda: self.save_xml())
 
 
         # Setting up Logbook function
-    def logbook(self, text='', text_color='black', font="MS Shell Dlg 2", size = '9.6pt'): 
+    def logbook(self, text='', text_color='white', font="Century Gothic", size = '9.6pt'): 
         set_text = "<span style=\" font-family:text_font; font-size:text_size; color : text_color \" >" + text + "</span>"
         write = set_text.replace('text_font', font)
         write = write.replace('text_color', text_color)
@@ -62,7 +85,6 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textBrowser.ensureCursorVisible()
         self.textBrowser.setAlignment(QtCore.Qt.AlignLeft)
         self.textBrowser.append(write)
-        # self.textBrowser.append('')
 
 
         # Getting entered values from GUI
@@ -78,60 +100,58 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             
             radius = eval(self.bes_radius_line.text())
             filter_temp = eval(self.filter_temp_line.text())
+            start = eval(self.mast_trigger_line.text())
             
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
-            self.logbook(f'--  {str(e)}  --', text_color='#800080')
+            self.logbook(f'--  {str(e)}  --', text_color=' #facb3f ')
             
         if 0.1 <= length <= 10:
             length = length
-            print(length)
         else:
             raise Exception('Interval error! XML file not saved')
             
         if 0.1 <= freq <= 4:
             freq = round(1/freq, 3)*1e-6
-            print(freq)
         else:
             raise Exception('Interval error! XML file not saved')
         
         if 350 <= bias_1 <= 450:
             bias_1 = bias_1
-            print(bias_1)
         else:
             raise Exception('Interval error! XML file not saved')
             
         if 350 <= bias_2 <= 450:
             bias_2 = bias_2
-            print(bias_2)
         else:
             raise Exception('Interval error! XML file not saved')
         
         if 15 <= temp <= 30:
             temp = temp
-            print(temp)
         else:
             raise Exception('Interval error! XML file not saved')
         
         if 0 <= trigger <= 1e7:
             trigger = trigger
-            print(trigger)
         else:
             raise Exception('Interval error! XML file not saved')
             
         if 20 <= filter_temp <= 60:
             filter_temp = filter_temp
-            print(filter_temp)
         else:
             raise Exception('Interval error! XML file not saved')
             
         if 0.7 <= radius <= 1.6:
             radius = radius
-            print(radius)
+        else:
+            raise Exception('Interval error! XML file not saved')
+            
+        if start >= 100:
+            start = round(-start/1000, 3)
         else:
             raise Exception('Interval error! XML file not saved')
         
-        return [length, freq, bias_1, bias_2, temp, trigger, clock, filter_temp, radius]
+        return [length, freq, bias_1, bias_2, temp, trigger, clock, filter_temp, radius, start]
     
     
     
@@ -139,21 +159,32 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def save_xml(self):
         try:
             values = self.get_values()
-            print(f'Values: {values}')
+            # print(f'Values: {values}')
             now = datetime.now()
             radius = values[8]
             
             tree = tree = ET.parse('apd_parameters.xml')
             root = tree.getroot()
+
+            lens_motor = self.radius_calc.lens_fit(radius)[0]
+            lens_encoder = self.radius_calc.lens_fit(radius)[5]        
             
+            if lens_motor > 123000:
+                lens_motor = 123000
+            else:
+                lens_motor = lens_motor
+            if radius == 1.6:
+                lens_motor = 0
+                
+            if lens_encoder < -19680:
+                lens_encoder = -19680
+            else:
+                lens_encoder = lens_encoder
+            if radius == 1.6:
+                lens_encoder = 0 
             
             mirror_param = self.radius_calc.mirror_fit(radius)
             camera_param = self.radius_calc.camera_fit(radius)
-            lens_param = self.radius_calc.lens_fit(radius)
-            
-            print(mirror_param)
-            print(camera_param)
-            print(lens_param)
             
             root[0].set('duration', str(values[0]))                 # lenght
             root[0].set('interval', str(values[1]))                 # freq
@@ -162,6 +193,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             root[0].set('temperature', str(values[4]))              # temp
             root[0].set('apd_trig_delay', str(values[5]))           # trigger
             root[0].set('clock', values[6])                         # clock
+            root[0].set('start', str(values[9]))                    # MAST trigger
             
             root[1].set('viewRadius', str(values[8]))               # radius
             root[5].set('temperature', str(values[7]))              # filter_temp
@@ -172,8 +204,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             root[2][0].set('stepsSet', str(round(camera_param[0])))      # camera motor
             root[2][1].set('stepsSet', str(round(camera_param[5])))      # camera encoder
             
-            root[4][0].set('stepsSet', str(round(lens_param[0])))        # mirror motor
-            root[4][1].set('stepsSet', str(round(lens_param[5])))        # mirror encoder
+            root[4][0].set('stepsSet', str(round(lens_motor)))           # mirror motor
+            root[4][1].set('stepsSet', str(round(lens_encoder)))         # mirror encoder
             
             file = ET.ElementTree(root)
             file.write('apd_parameters.xml')
@@ -181,7 +213,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.logbook(f'Entered parameters are saved in XML  -----  @ {str(now)}')
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
-            self.logbook(f'--  {str(e)}  --', text_color='#800080')
+            self.logbook(f'--  {str(e)}  --', text_color=' #facb3f ')
 
    
         # Loading parameter values from XML file
@@ -192,15 +224,17 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             
             length = root[0].get('duration')
             freq = root[0].get('interval')
-            # freq1 = freq.removesuffix('e-07')
             freq1 = str(round(1e-6/eval(freq),1))
             bias_1 = root[0].get('apd_bias_1')
             bias_2 = root[0].get('apd_bias_2')
             temp = root[0].get('temperature')
             trigger = root[0].get('apd_trig_delay')
+            clock = root[0].get('clock')
             
             radius = root[1].get('viewRadius')
             filter_temp= root[5].get('temperature')
+            start = root[0].get('start')
+            start1 = str(round(eval(start)*-1000))
             
             self.length_line.setText(length)
             self.freq_line.setText(freq1)
@@ -208,15 +242,17 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.bias_v_2_line.setText(bias_2)
             self.temp_line.setText(temp)
             self.trigger_line.setText(trigger)
+            self.clock_combo.setCurrentText(clock)
             
             self.bes_radius_line.setText(radius)
             self.filter_temp_line.setText(filter_temp)
+            self.mast_trigger_line.setText(start1)
             
             print('Previous parameters are loaded\n')
             self.logbook('Previous parameters are loaded')
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
-            self.logbook(f'--  {str(e)}  --', text_color='#800080')
+            self.logbook(f'--  {str(e)}  --', text_color=' #facb3f ')
             print('Could not load previous parameters, so default parameters are loaded')
             self.logbook('Could not load previous parameters, so default parameters are loaded')
             self.default_val()
@@ -238,9 +274,11 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.bias_v_2_line.setText(values[3])
         self.temp_line.setText(values[4])
         self.trigger_line.setText(values[5])
+        self.clock_combo.setCurrentIndex(0)
         
         self.bes_radius_line.setText(values[6])
         self.filter_temp_line.setText(values[7])
+        self.mast_trigger_line.setText(str(round(eval(values[8])*-1000)))
         
         print('Default parameters are loaded\n')
         self.logbook('Default parameters are loaded')
@@ -266,8 +304,6 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         elif sys.platform == "linux" or sys.platform == "linux2":
             subprocess.call(['xdg-open', file])
         
-        
-
 
 def GUI():
     app = QtWidgets.QApplication([])
@@ -278,7 +314,7 @@ def GUI():
     # trayIcon = QSystemTrayIcon(QtGui.QIcon('pstc-256x256.png'), parent=app)
     widget = BES_GUI()
     # trayIcon.show()
-    widget.show() 
+    widget.showMaximized()
     app.exec_()    
          
 if __name__ == '__main__':

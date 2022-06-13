@@ -1,19 +1,19 @@
 <xbt>
   <apdcam interval="2.5e-07" start="-0.1" duration="1.1" serial="4" apd_bias_1="350" apd_bias_2="350" temperature="25" apd_trig_delay="0" clock="External">
   </apdcam>
-  <mirror viewRadius="1.0" mirrorAngle="41.75">
-    <motor stepsSet="58326" stepsInit="110000" maxSpeed="100" holdCurrent="40" timeOut="20" limitLow="-130000" limitHigh="117000">
+  <mirror viewRadius="1.2" mirrorAngle="41.75">
+    <motor stepsSet="74999" stepsInit="110000" maxSpeed="100" holdCurrent="40" timeOut="20" limitLow="-130000" limitHigh="117000">
       <calibration stepsPerDegree="2216.855" stepsOffset="-19006" />
     </motor>
-    <encoder stepsTolerance="100" stepsSet="-2037" stepsInit="-3855">
+    <encoder stepsTolerance="100" stepsSet="-2623" stepsInit="-3855">
       <calibration stepsRatio="-0.03519" stepsOffset="16" />
     </encoder>
   </mirror>
   <camera>
-    <motor stepsSet="18311" maxSpeed="2000" holdCurrent="80" timeOut="5" limitLow="-100" limitHigh="30000">
+    <motor stepsSet="15094" maxSpeed="2000" holdCurrent="80" timeOut="5" limitLow="-100" limitHigh="30000">
       <calibration stepsPerDegree="-443.381" stepsOffset="33692" />
     </motor>
-      <encoder stepsTolerance="100" stepsSet="-2929">
+      <encoder stepsTolerance="100" stepsSet="-2416">
         <calibration stepsRatio="-0.15972" stepsOffset="-5" />
       </encoder>
     </camera>
@@ -26,8 +26,8 @@
       </encoder>
     </backup_motor>
     <lens>
-      <motor stepsSet="81866" maxSpeed="5000" holdCurrent="40" timeOut="1" limitLow="-100" limitHigh="123500" />
-      <encoder stepsTolerance="100" stepsSet="-13101">
+      <motor stepsSet="53695" maxSpeed="5000" holdCurrent="40" timeOut="1" limitLow="-100" limitHigh="123500" />
+      <encoder stepsTolerance="100" stepsSet="-8592">
         <calibration stepsRatio="-0.16000" stepsOffset="-1" />
       </encoder>
     </lens>

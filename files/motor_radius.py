@@ -44,7 +44,7 @@ print('y= %.2f * x**3 + %.2f * x**2 + %.0f*x+ %.0f' % (a, b, c, d))
 pyplot.scatter(x, y)
 # define a sequence of inputs between the smallest and largest known inputs
 x_line = arange(min(x), max(x)+0.001, 0.01)
-x=0.8
+x=1.5
 #or i in range(len(lst)):
 #   z=lst[i]
 print("Ha x értéke ", x, "akkor y erteke", value_m(x, a, b,c, d))

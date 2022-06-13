@@ -21,4 +21,4 @@ Comands that work on Linux scientific:
 
 
 To start BES GUI please run file:
-BES_gui/bes_gui_connect1.py
+BES_gui/bes_gui.py
