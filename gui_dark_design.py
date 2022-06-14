@@ -57,6 +57,7 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setGeometry(QtCore.QRect(30, 20, 1850, 900))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.gridLayout_2 = QtWidgets.QGridLayout()
@@ -259,13 +260,13 @@ class Ui_MainWindow(object):
 "border: None;\n"
 "}\n"
 "\n"
-# "QComboBox:hover {\n"
-# "    background-color: rgb(88, 82, 56);\n"
-# "}\n"
-# "\n"
-# "QComboBox:pressed{\n"
-# "    background-color: rgb(62, 72, 82);\n"
-# "}\n"
+"QComboBox:hover {\n"
+"    background-color: rgb(88, 82, 56);\n"
+"}\n"
+"\n"
+"QComboBox:pressed{\n"
+"    background-color: rgb(62, 72, 82);\n"
+"}\n"
 "\n"
 "QComboBox QAbstractItemView {\n"
 "    background-color: rgb(52, 62, 72);\n"
@@ -277,10 +278,10 @@ class Ui_MainWindow(object):
 "    background-color: rgb(52, 62, 72);\n"
 "    color: rgb(250, 203, 63);\n"
 "}\n"
-# "QComboBox QAbstractItemView:hover {\n"
-# "    background-color: rgb(52, 62, 72);\n"
-# "    color: rgb(250, 250, 250)\n"
-# "}\n"
+"QComboBox QAbstractItemView:hover {\n"
+"    background-color: rgb(52, 62, 72);\n"
+"    color: rgb(250, 250, 250)\n"
+"}\n"
 "")
         self.clock_combo.setObjectName("clock_combo")
         self.clock_combo.addItem("")
@@ -626,7 +627,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.textBrowser = QtWidgets.QTextBrowser(self.gridLayoutWidget)
         self.textBrowser.setMinimumSize(QtCore.QSize(1000, 210))
-        self.textBrowser.setMaximumSize(QtCore.QSize(16777215, 210))
+        self.textBrowser.setMaximumSize(QtCore.QSize(16777215, 250))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         self.textBrowser.setFont(font)
@@ -786,10 +787,24 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.length_line, self.freq_line)
+        MainWindow.setTabOrder(self.freq_line, self.bias_v_1_line)
+        MainWindow.setTabOrder(self.bias_v_1_line, self.bias_v_2_line)
+        MainWindow.setTabOrder(self.bias_v_2_line, self.temp_line)
+        MainWindow.setTabOrder(self.temp_line, self.trigger_line)
+        MainWindow.setTabOrder(self.trigger_line, self.clock_combo)
+        MainWindow.setTabOrder(self.clock_combo, self.bes_radius_line)
+        MainWindow.setTabOrder(self.bes_radius_line, self.filter_temp_line)
+        MainWindow.setTabOrder(self.filter_temp_line, self.mast_trigger_line)
+        MainWindow.setTabOrder(self.mast_trigger_line, self.save_button)
+        MainWindow.setTabOrder(self.save_button, self.load_button)
+        MainWindow.setTabOrder(self.load_button, self.load_default_button)
+        MainWindow.setTabOrder(self.load_default_button, self.exit_button)
+        MainWindow.setTabOrder(self.exit_button, self.textBrowser)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "BES @ MAST"))
         self.groupBox_2.setTitle(_translate("MainWindow", "BES parameters"))
         self.label_28.setText(_translate("MainWindow", "Interval  range"))
         self.label_11.setText(_translate("MainWindow", "Filter temperature:"))

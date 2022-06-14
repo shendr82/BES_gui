@@ -11,6 +11,7 @@ Packages to install:
 - numpy
 - pyqt5
 - matplotlib
+- scipy
 
 Comands that work on Linux scientific:
   sudo yum install python3-numpy

@@ -15,7 +15,7 @@ file. This XML file is then used to set up the APDCAM for the next measurement.
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-# from PyQt5.QtWidgets import QVBoxLayout, QDialog, QMessageBox, QSystemTrayIcon
+from PyQt5.QtWidgets import QSystemTrayIcon
 
 from gui_dark_design import Ui_MainWindow
 import rad_mot_enc_fit
@@ -307,13 +307,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 
 def GUI():
     app = QtWidgets.QApplication([])
-    # app_icon = QtGui.QIcon()
-    # app_icon.addPixmap(QtGui.QPixmap('pstc-256x256.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
-    # app.setWindowIcon(app_icon)
-#    app.setWindowTitle("SPI sensor data")
-    # trayIcon = QSystemTrayIcon(QtGui.QIcon('pstc-256x256.png'), parent=app)
+    app_icon = QtGui.QIcon()
+    app_icon.addPixmap(QtGui.QPixmap('BES MAST 256.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
+    app.setWindowIcon(app_icon)
+    # app.setWindowTitle("BES @MAST")
+    trayIcon = QSystemTrayIcon(QtGui.QIcon('BES MAST 256.png'), parent=app)
     widget = BES_GUI()
-    # trayIcon.show()
+    trayIcon.show()
     widget.showMaximized()
     app.exec_()    
          
