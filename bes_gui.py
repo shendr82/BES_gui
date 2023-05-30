@@ -34,8 +34,6 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        # self.setFixedSize(1500, 1000)
-        # self.resize(1400, 960)
         
             # Load previous parameters from last XML
         self.load_xml()     
@@ -43,7 +41,12 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         
             # File menu button actions
         self.actionOpen_XML_file.triggered.connect(lambda: self.open_xml())
+        self.actionOpen_XML_file.setShortcut('Ctrl+O')
+        self.actionExit_GUI.triggered.connect(lambda: self.close())
+        self.actionExit_GUI.setShortcut('Ctrl+Q')        
+        
         self.actionReadMe.triggered.connect(lambda: self.open_readme())
+        self.actionReadMe.setShortcut('Ctrl+H')        
 
             # Pushbutton actions
         self.save_button.clicked.connect(lambda: self.save_xml())
@@ -160,7 +163,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             values = self.get_values()
             # print(f'Values: {values}')
-            now = datetime.now()
+            now = datetime.now().isoformat(' ', 'seconds')
             radius = values[8]
             
             tree = tree = ET.parse('apd_parameters.xml')
@@ -219,7 +222,16 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # Loading parameter values from XML file
     def load_xml(self):
         try:
-            tree = tree = ET.parse('apd_parameters.xml')
+            file = 'apd_parameters.xml'
+            if os.path.isfile(file) == False:
+                file = 'apd_parameters_default.xml'
+                self.logbook('Error message:', text_color="#ff0000")
+                self.logbook('Original apd_parameters.xml file not found. Default parameters file is loaded.',
+                             text_color=' #facb3f ')
+            else:
+                print('Previous parameters are loaded\n')
+                self.logbook('Previous parameters are loaded')
+            tree = tree = ET.parse(file)
             root = tree.getroot()
             
             length = root[0].get('duration')
@@ -248,8 +260,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.filter_temp_line.setText(filter_temp)
             self.mast_trigger_line.setText(start1)
             
-            print('Previous parameters are loaded\n')
-            self.logbook('Previous parameters are loaded')
+            
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
             self.logbook(f'--  {str(e)}  --', text_color=' #facb3f ')
@@ -308,10 +319,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
 def GUI():
     app = QtWidgets.QApplication([])
     app_icon = QtGui.QIcon()
-    app_icon.addPixmap(QtGui.QPixmap('BES MAST 256.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
+    app_icon.addPixmap(QtGui.QPixmap('BES-MAST-256.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
     app.setWindowIcon(app_icon)
-    # app.setWindowTitle("BES @MAST")
-    trayIcon = QSystemTrayIcon(QtGui.QIcon('BES MAST 256.png'), parent=app)
+    trayIcon = QSystemTrayIcon(QtGui.QIcon('BES-MAST-256.png'), parent=app)
     widget = BES_GUI()
     trayIcon.show()
     widget.showMaximized()
