@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="[SCHEMA-URL]"
+  svn="[REVISION-ID]" >
+
+  <group datadir="data" filename="*000000.nc" dataspec="nc4" timeout="100">
+
+    <!--device id="1" type="parameter" name="xmw">
+      <output type="clk" number="20"/>
+      <output type="trg" number="20"/>
+      <parameter>
+        <file host="[PARAM-SERVER-NAME]" port="[PARAM-SERVER-PORT]" name="parameter.xmw"/>
+      </parameter>
+    </device-->
+
+    <device id="2" type="parameter" name="bes">
+      <output type="acq" number="1"/>
+      <output type="sig" number="6"/>
+      <parameter>
+        <!-- file host="[PARAM-SERVER-NAME]" port="[PARAM-SERVER-PORT]" name="xbt_param.xml"/ -->
+        <file name="xbt_param.xml"/>
+      </parameter>
+    </device>
+
+    <device id="3" type="apdcam10g" name="APDcamera10G" path="10.123.13.102" use="1">
+      <input type="trg_in">
+        <in device="1" channel="1"/>
+      </input>
+      <input type="ref_in">
+        <in device="1" channel="5"/>
+      </input>
+      <input type="acq_prog">
+        <in device="2" channel="1"/>
+      </input>
+      <input type="sig_prog">
+        <in device="2" channel="6"/>
+      </input>
+      <output type="adc" number="128"/>
+      <data codec="3">
+        <item channel="1" name="bes/channel01" label="Volt" unit="V"/>
+        <item channel="2" name="bes/channel02" label="Volt" unit="V"/>
+        <item channel="3" name="bes/channel03" label="Volt" unit="V"/>
+        <item channel="4" name="bes/channel04" label="Volt" unit="V"/>
+        <item channel="5" name="bes/channel05" label="Volt" unit="V"/>
+        <item channel="6" name="bes/channel06" label="Volt" unit="V"/>
+        <item channel="7" name="bes/channel07" label="Volt" unit="V"/>
+        <item channel="8" name="bes/channel08" label="Volt" unit="V"/>
+        <item channel="9" name="bes/channel09" label="Volt" unit="V"/>
+        <item channel="10" name="bes/channel10" label="Volt" unit="V"/>
+        <item channel="11" name="bes/channel11" label="Volt" unit="V"/>
+        <item channel="12" name="bes/channel12" label="Volt" unit="V"/>
+        <item channel="13" name="bes/channel13" label="Volt" unit="V"/>
+        <item channel="14" name="bes/channel14" label="Volt" unit="V"/>
+        <item channel="15" name="bes/channel15" label="Volt" unit="V"/>
+        <item channel="16" name="bes/channel16" label="Volt" unit="V"/>
+        <item channel="17" name="bes/channel17" label="Volt" unit="V"/>
+        <item channel="18" name="bes/channel18" label="Volt" unit="V"/>
+        <item channel="19" name="bes/channel19" label="Volt" unit="V"/>
+        <item channel="20" name="bes/channel20" label="Volt" unit="V"/>
+        <item channel="21" name="bes/channel21" label="Volt" unit="V"/>
+        <item channel="22" name="bes/channel22" label="Volt" unit="V"/>
+        <item channel="23" name="bes/channel23" label="Volt" unit="V"/>
+        <item channel="24" name="bes/channel24" label="Volt" unit="V"/>
+        <item channel="25" name="bes/channel25" label="Volt" unit="V"/>
+        <item channel="26" name="bes/channel26" label="Volt" unit="V"/>
+        <item channel="27" name="bes/channel27" label="Volt" unit="V"/>
+        <item channel="28" name="bes/channel28" label="Volt" unit="V"/>
+        <item channel="29" name="bes/channel29" label="Volt" unit="V"/>
+        <item channel="30" name="bes/channel30" label="Volt" unit="V"/>
+        <item channel="31" name="bes/channel31" label="Volt" unit="V"/>
+        <item channel="32" name="bes/channel32" label="Volt" unit="V"/>
+	<item channel="33" name="bes/channel33" label="Volt" unit="V"/>
+        <item channel="34" name="bes/channel34" label="Volt" unit="V"/>
+        <item channel="35" name="bes/channel35" label="Volt" unit="V"/>
+        <item channel="36" name="bes/channel36" label="Volt" unit="V"/>
+        <item channel="37" name="bes/channel37" label="Volt" unit="V"/>
+        <item channel="38" name="bes/channel38" label="Volt" unit="V"/>
+        <item channel="39" name="bes/channel39" label="Volt" unit="V"/>
+        <item channel="40" name="bes/channel40" label="Volt" unit="V"/>
+        <item channel="41" name="bes/channel41" label="Volt" unit="V"/>
+        <item channel="42" name="bes/channel42" label="Volt" unit="V"/>
+        <item channel="43" name="bes/channel43" label="Volt" unit="V"/>
+        <item channel="44" name="bes/channel44" label="Volt" unit="V"/>
+        <item channel="45" name="bes/channel45" label="Volt" unit="V"/>
+        <item channel="46" name="bes/channel46" label="Volt" unit="V"/>
+        <item channel="47" name="bes/channel47" label="Volt" unit="V"/>
+        <item channel="48" name="bes/channel48" label="Volt" unit="V"/>
+        <item channel="49" name="bes/channel49" label="Volt" unit="V"/>
+        <item channel="50" name="bes/channel50" label="Volt" unit="V"/>
+        <item channel="51" name="bes/channel51" label="Volt" unit="V"/>
+        <item channel="52" name="bes/channel52" label="Volt" unit="V"/>
+        <item channel="53" name="bes/channel53" label="Volt" unit="V"/>
+        <item channel="54" name="bes/channel54" label="Volt" unit="V"/>
+        <item channel="55" name="bes/channel55" label="Volt" unit="V"/>
+        <item channel="56" name="bes/channel56" label="Volt" unit="V"/>
+        <item channel="57" name="bes/channel57" label="Volt" unit="V"/>
+        <item channel="58" name="bes/channel58" label="Volt" unit="V"/>
+        <item channel="59" name="bes/channel59" label="Volt" unit="V"/>
+        <item channel="60" name="bes/channel60" label="Volt" unit="V"/>
+        <item channel="61" name="bes/channel61" label="Volt" unit="V"/>
+        <item channel="62" name="bes/channel62" label="Volt" unit="V"/>
+        <item channel="63" name="bes/channel63" label="Volt" unit="V"/>
+        <item channel="64" name="bes/channel64" label="Volt" unit="V"/>
+      </data>
+      <apdcam10g rate="1e6" duration="0.6" apd_bias1="350" apd_bias2="360" 
+      	start="10" temperature="26" apd_trig_delay="0">
+        <channel id="1" offset="1250"/>
+        <channel ids="2-32" offset="1250"/>
+	<channel ids="33-64" offset="1250"/>
+      </apdcam10g>
+    </device>
+
+    <!--<device id="4" type="stepper" path="COM2" name="mirror" use="1">
+      <input type="sig_prog">
+        <in device="2" channel="1"/>
+        <in device="2" channel="2"/>
+      </input>
+      <stepper viewRadius="1.500" mirrorAngle="54.94">
+        <motor stepsSet="38427" stepsInit="120000" maxSpeed="5000" 
+	    holdCurrent="40" timeOut="30" limitLow="5000" limitHigh="120500">
+          <calibration stepsPerDegree="-1576.454" stepsOffset="104241"/>
+        </motor>
+        <encoder stepsTolerance="100" stepsSet="1354" stepsInit="4200">
+          <calibration stepsRatio="0.03516" stepsOffset="3"/>
+        </encoder>
+      </stepper>
+    </device>
+
+    <device id="5" type="stepper" path="COM3" name="camera" use="1">
+      <input type="sig_prog">
+        <in device="2" channel="3"/>
+      </input>
+      <stepper>
+        <motor stepsSet="3698" maxSpeed="1000" holdCurrent="40" timeOut="30" 
+	       limitLow="100" limitHigh="12500">
+          <calibration stepsPerDegree="-213.333" stepsOffset="12604"/>
+        </motor>
+        <encoder stepsTolerance="100" stepsSet="591">
+          <calibration stepsRatio="0.16000" stepsOffset="0"/>
+        </encoder>
+      </stepper>
+    </device>
+
+    <device id="6" type="stepper" path="COM4" name="filter" use="1">
+      <input type="sig_prog">
+        <in device="2" channel="4"/>
+      </input>
+      <stepper>
+        <motor stepsSet="62609" maxSpeed="5000" holdCurrent="40" timeOut="20" 
+	       limitLow="10000" limitHigh="120000">
+          <calibration stepsPerDegree="355.556" stepsOffset="47765"/>
+        </motor>
+        <encoder stepsTolerance="100" stepsSet="10015">
+          <calibration stepsRatio="0.16000" stepsOffset="-2"/>
+        </encoder>
+      </stepper>
+    </device>
+
+    <device id="7" type="stepper" path="COM5" name="lens" use="1">
+      <input type="sig_prog">
+        <in device="2" channel="5"/>
+      </input>
+      <stepper>
+        <motor stepsSet="5000" maxSpeed="5000" holdCurrent="40" timeOut="20" 
+	       limitLow="0" limitHigh="22000"/>
+        <encoder stepsTolerance="100" stepsSet="801">
+          <calibration stepsRatio="0.16000" stepsOffset="1"/>
+        </encoder>
+      </stepper>
+    </device>-->
+
+  </group>
+
+  <states server="MSG_2_SERVER">
+    <state id="1"  name="Stop"                                auto="3"  delay="1"/>
+    <state id="2"  name="Exit"/>
+    <state id="3"  name="Idle"                   local="2,4"/>
+    <state id="4"  name="Run"                                 auto="5"  delay="1"/>
+    <state id="5"  name="Ready"   central="6"    local="1,6"/>
+    <state id="6"  name="PreShot" central="11"   local="11"   auto="34" delay="1"/>
+    <state id="8"  name="Trigger" central="11"   local="11"   auto="35" delay="1"/>
+    <state id="9"  name="PostShot"               local="11"   auto="12" delay="1"/>
+    <state id="10" name="Reset"                               auto="5"  delay="1"/>
+    <state id="11" name="Abort"                               auto="10" delay="1"/>
+    <state id="12" name="DataFile"                            auto="11" delay="1"/>
+    <state id="14" name="Init"                                auto="4"  delay="1"/>
+    <state id="19" name="WaitArm" central="8,11" local="8,11"/>
+    <state id="20" name="WaitEnd" central="9,11" local="9,11"/>
+    <state id="29" name="Fault"   central="11"   local="1,11"/>
+    <state id="30" name="Connect"                             auto="14" delay="1"/>
+    <state id="34" name="Set"     central="11"   local="11"   auto="19" delay="1"/>
+    <state id="35" name="Arm"     central="11"   local="11"   auto="20" delay="1"/>
+  </states>
+
+</config>
