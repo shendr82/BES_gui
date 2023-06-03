@@ -102,8 +102,7 @@
         <item channel="63" name="bes/channel63" label="Volt" unit="V"/>
         <item channel="64" name="bes/channel64" label="Volt" unit="V"/>
       </data>
-      <apdcam10g rate="1e6" duration="0.6" apd_bias1="350" apd_bias2="360" 
-      	start="10" temperature="26" apd_trig_delay="0">
+      <apdcam10g interval="2.5e-7" start="-0.1" duration="1.1" serial="4" apd_bias_1="350" apd_bias_2="350" temperature="25" apd_trig_delay="0" clock="External">
         <channel id="1" offset="1250"/>
         <channel ids="2-32" offset="1250"/>
 	<channel ids="33-64" offset="1250"/>
