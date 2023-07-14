@@ -23,8 +23,6 @@ import rad_mot_enc_fit
 
 import mast_shot.shot_details as shot
 # from mast_shot.da_proxy import return_shot_and_state
-from mast_shot.refresh_cycle import web_refresher as cycle
-
 
 from files.read_cnf import ReadConfig
 from files.write_cnf import WriteConfig
@@ -33,46 +31,36 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-import time
-# import gc
-# import threading
-import multiprocessing
-# import concurrent.futures
 
 
 
 class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
+        
         self.setupUi(self)
         self.app = QtWidgets.QApplication(sys.argv)
         self.MainWindow = QtWidgets.QMainWindow()
+        
             # Toggle switch button
         self.swich = Switch(thumb_radius=11, track_radius=8)        
         self.gridLayout_8.addWidget(self.swich, 6, 1, 1, 1)
         
-        
             # Load previous parameters from last BES_settings.cnf and radius calculator function
         self.datapath = self.setup_datapath()
-        self.cnf_file = os.path.join(self.datapath, 'files\\BES_settings.cnf')
-        self.cnf_default_file = os.path.join(self.datapath, 'files\\BES_default_settings.cnf')
-        self.cnf_test_file = os.path.join(self.datapath, 'files\\BES_settings_test.cnf')
-        # self.besStr = ReadConfig(self.cnf_file).besStr
+        self.directory = ''
+        self.cnf_file = os.path.join(self.datapath, 'BES_settings.cnf')
+        # self.cnf_file = 'BES_settings.cnf'
+        self.cnf_default_file = os.path.join(self.datapath, 'BES_default_settings.cnf')
+        self.cnf_test_file = os.path.join(self.datapath, 'BES_settings_test.cnf')
         self.besStr = self.load_cnf()     
         self.radius_calc = rad_mot_enc_fit
         
-        
             # Indicator and Shot number from MAST
-        # self.get_shot_details()
-        # process2 = multiprocessing.Process(target=cycle)
-        # process2.start()
-        # process2.join()
-        self.shot = shot.get_shot_number()
-        self.shot_number()
-        # last_pulse,MASTU_state = return_shot_and_state()
-        # self.shot_and_state = MASTU_state
-        # self.set_indicator()
-        
+        self.shot_nr = shot.get_shot_number()
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update_signal)
+        self.timer.start(10000)  # 10 seconds interval
         
             # File menu button actions
         self.actionOpen_cnf_file.triggered.connect(lambda: self.open_cnf())
@@ -94,11 +82,12 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         
             # Enter pressesd actions
         self.length_line.returnPressed.connect(lambda: self.save_cnf())
-        # self.freque_combo.returnPressed.connect(lambda: self.save_cnf())
+        self.freque_combo.currentIndexChanged.connect(lambda: self.save_cnf())
         self.bias_v_1_line.returnPressed.connect(lambda: self.save_cnf())
         self.bias_v_2_line.returnPressed.connect(lambda: self.save_cnf())
         self.temp_line.returnPressed.connect(lambda: self.save_cnf())
         self.trigger_line.returnPressed.connect(lambda: self.save_cnf())
+        self.clock_combo.currentIndexChanged.connect(lambda: self.save_cnf())
         self.bes_radius_line.returnPressed.connect(lambda: self.save_cnf())
         self.filter_temp_line.returnPressed.connect(lambda: self.save_cnf())
         self.mast_trigger_line.returnPressed.connect(lambda: self.save_cnf())
@@ -119,23 +108,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def setup_datapath(self):
         try:            
             self.logbook("Reading datapath: ")
-            thisdir = os.path.dirname(os.path.realpath('BES_settins.cnf'))
+            thisdir = os.path.dirname(os.path.realpath('files\\BES_settins.cnf'))
             self.logbook("Datapath: " + thisdir)
             print(f'Current set datapath: {thisdir}')
      
         except:
             self.logbook("<span style=\"color:#ff0000\" >"+'Could not read datapath'+"</span>")
         return thisdir
-
-    
-        # Getting MAST shot details
-    def get_shot_details(self):
-        while True:
-            self.shot = shot.get_shot_number()
-            # last_pulse,MASTU_state = return_shot_and_state()
-            time.sleep(20)
-            
-        self.logbook(f'Current shot number:  {str(shot)}')
         
 
         # Getting entered values from GUI
@@ -241,8 +220,6 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             now = datetime.now().isoformat(' ', 'seconds')
             radius = values[8]
             self.besStr.stepperParams[0].viewRadius = values[8]
-            
-            print(f'Ez a viewRadius: {self.besStr.stepperParams[0].viewRadius}')
 
             lens_motor = self.radius_calc.lens_fit(radius)[0]
             lens_encoder = self.radius_calc.lens_fit(radius)[5]        
@@ -299,9 +276,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             print(self.besStr.apdParams.clkSrc)
             print(self.besStr.filterParams.type)
             
-            WriteConfig(self.cnf_test_file).writeFile(self.besStr)
-            
-            self.logbook(f'Entered parameters are saved in cnf file  -----  @ {str(now)}')
+            if os.path.exists(self.cnf_file):
+                print('Datapath + cnf_file: ' + self.cnf_file)
+                WriteConfig(self.cnf_file).writeFile(self.besStr)
+                self.logbook(f'Entered parameters are saved in cnf file  -----  @ {str(now)}')
+            else:
+                self.logbook('File does not exist in current directory, check Datapath!')
+                
         except Exception as e:
             self.logbook('Exeption error message:', text_color="#ff0000")
             self.logbook(f'--  {str(e)}  --', text_color=' #facb3f ')
@@ -391,6 +372,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.logbook("New Datapath is given: " + str(self.datapath))
                 print(self.datapath)
                 print(ok)
+                self.cnf_file = os.path.join(self.datapath, 'BES_settings.cnf')
+                self.cnf_default_file = os.path.join(self.datapath, 'BES_default_settings.cnf')
+                self.cnf_test_file = os.path.join(self.datapath, 'BES_settings_test.cnf')
             else:
                 self.logbook("<span style=\"color:#ff0000\" >"+'No new datapath is given'+"</span>")
                 
@@ -398,11 +382,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.logbook.append("<span style=\"color:#ff0000\" >"+'No new datapath is given'+"</span>")
                 
     
-       
         # Run open Readme.txt file
     def open_readme(self):
         file = 'readme.txt'
-        # os.startfile(file)
         if sys.platform == 'win32':
             os.startfile(file)
         elif sys.platform == "linux" or sys.platform == "linux2":
@@ -418,8 +400,11 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.logbook('Plasma EDGE is mesured with APDCam')
             
     def shot_number(self):
-        self.lcdNumber.setProperty("intValue", self.shot) 
-        self.logbook(f'MAST shot number: --- {self.shot} ---')
+        shot_nr_new = shot.get_shot_number()
+        if shot_nr_new != self.shot_nr:
+            self.shot_nr = shot.get_shot_number()
+            self.lcdNumber.setProperty("intValue", self.shot_nr) 
+            self.logbook(f'MAST shot number: --- {self.shot_nr} ---')
         
     def set_indicator(self):
         if self.shot_and_state > 5:
@@ -437,64 +422,39 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                                         "QPushButton:checked{\n"
                                         "    background-color: rgb(170, 67, 68);\n"
                                         "}")
+            self.save_button.setEnabled(False)
+            self.save_button.setStyleSheet("QPushButton{\n"
+                                            "background-color: rgb(100,100,100);\n"
+                                            "color: rgb(255, 255, 255);\n"
+                                            "border: 1px solid white;\n"
+                                            "pressed: rgb(255, 255, 255);\n"
+                                            "}\n")
+            self.load_button.setEnabled(False)
+            self.load_button.setStyleSheet("QPushButton{\n"
+                                            "background-color: rgb(100,100,100);\n"
+                                            "color: rgb(255, 255, 255);\n"
+                                            "border: 1px solid white;\n"
+                                            "pressed: rgb(255, 255, 255);\n"
+                                            "}\n")
+            self.load_default_button.setEnabled(False)
+            self.load_default_button.setStyleSheet("QPushButton{\n"
+                                            "background-color: rgb(100,100,100);\n"
+                                            "color: rgb(255, 255, 255);\n"
+                                            "border: 1px solid white;\n"
+                                            "pressed: rgb(255, 255, 255);\n"
+                                            "}\n")
+            
+    def update_signal(self):
+        # last_pulse,MASTU_state = return_shot_and_state()
+        # self.shot_and_state = MASTU_state
+        self.shot_and_state = 6
+        self.set_indicator()
+        self.shot_number()
             
     def start(self):
         self.MainWindow.show()
         sys.exit(self.app.exec_())
 
-
-
-
-# """
-# Worker - QThread
-
-# """      
-  
-
-class Worker(QtCore.QRunnable):
-    '''
-    This class is a direct copy from https://www.learnpyqt.com/tutorials/multithreading-pyqt-applications-qthreadpool/
-    Worker thread
-
-    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
-
-    :param callback: The function callback to run on this worker thread. Supplied args and
-                      kwargs will be passed through to the runner.
-    :type callback: function
-    :param args: Arguments to pass to the callback function
-    :param kwargs: Keywords to pass to the callback function
-
-    '''
-
-    sig_msg = QtCore.pyqtSignal(str)
-
-    def __init__(self, fn, *args, **kwargs):
-        super(Worker, self).__init__()
-        # Store constructor arguments (re-used for processing)
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-
-    def run(self):
-        '''
-        Initialise the runner function with passed args, kwargs.
-        '''
-        if hasattr(self, 'logbook_start_text'):
-            self.sig_msg.emit(self.logbook_start_text)
-        self.fn(*self.args, **self.kwargs)
-        if hasattr(self, 'logbook_stop_text'):
-            self.sig_msg.emit(self.logbook_stop_text)
-#         gc.collect()
-
-def func1():
-    while True:
-        # time.sleep(10)
-        print('Hello world')
-        # return 'Szia uram'
-        
-# def multi_processing():
-#     with multiprocessing.Pool(initializer=GUI) as pool:
-#         pool.map(func1)
         
 
 def GUI():
@@ -510,33 +470,8 @@ def GUI():
     
          
 if __name__ == '__main__':
-    # GUI()
+    GUI()
     # gui = GUI()
     # gui.start()
     # sys.exit(gui.exec_())
-    
-    process1 = multiprocessing.Process(target=GUI)
-    process2 = multiprocessing.Process(target=cycle)
-    process2.start()
-    process1.start()
-    process1.join()
-    process2.join()
-    # event = threading.Event()
 
-    # # Create two threads for the functions
-    # # thread1 = threading.Thread(target=GUI())
-    # thread2 = threading.Thread(target=func1())
-    
-    # # Start both threads
-    # # thread1.run()
-    # thread2.start()
-    # # cycle()
-    # GUI()
-    # # func1()
-    # # thread2.join()
-    # # Wait for both threads to complete
-    # # thread1.join()
-    # # thread2.join()
-    
-    # # # Continue with the main program logic
-    # # print("Main program continues...")      
