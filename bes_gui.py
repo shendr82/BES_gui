@@ -445,9 +445,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                                             "}\n")
             
     def update_signal(self):
-        # last_pulse,MASTU_state = return_shot_and_state()
-        # self.shot_and_state = MASTU_state
-        self.shot_and_state = 6
+        last_pulse,MASTU_state = return_shot_and_state()
+        self.shot_and_state = MASTU_state
+        # self.shot_and_state = 6
         self.set_indicator()
         self.shot_number()
             
