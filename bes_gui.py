@@ -22,7 +22,7 @@ from toggle_swich import Switch
 import rad_mot_enc_fit
 
 import mast_shot.shot_details as shot
-# from mast_shot.da_proxy import return_shot_and_state
+from mast_shot.da_proxy import return_shot_and_state
 
 from files.read_cnf import ReadConfig
 from files.write_cnf import WriteConfig
