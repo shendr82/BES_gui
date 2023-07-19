@@ -8,10 +8,10 @@ Created on Thu Jun 15 13:35:19 2023
 import os
 
 
-DAProxy_path = 'D:\\IRVB\\mastda\\DAProxy'
+# DAProxy_path = 'D:\\IRVB\\mastda\\DAProxy'
 # DAProxy_file = 'prx' + target_folder.translate({ord('-'):None})[2:] + '.log'
 # DAProxy_full_path = DAProxy_path+'\\log\\'+DAProxy_file
-DAProxy_full_path = /home/muadmin/BES_DATAC/BES/xbt_test/log/xbt230719.log
+DAProxy_full_path = '/home/muadmin/BES_DATAC/BES/xbt_test/log/xbt230719.log'
 print('checking file '+DAProxy_full_path)
 while not os.path.exists(DAProxy_full_path):
     print('checking file '+DAProxy_full_path)
