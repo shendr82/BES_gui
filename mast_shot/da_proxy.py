@@ -9,8 +9,9 @@ import os
 
 
 DAProxy_path = 'D:\\IRVB\\mastda\\DAProxy'
-DAProxy_file = 'prx' + target_folder.translate({ord('-'):None})[2:] + '.log'
-DAProxy_full_path = DAProxy_path+'\\log\\'+DAProxy_file
+# DAProxy_file = 'prx' + target_folder.translate({ord('-'):None})[2:] + '.log'
+# DAProxy_full_path = DAProxy_path+'\\log\\'+DAProxy_file
+DAProxy_full_path = /home/muadmin/BES_DATAC/BES/xbt_test/log/xbt230719.log
 print('checking file '+DAProxy_full_path)
 while not os.path.exists(DAProxy_full_path):
     print('checking file '+DAProxy_full_path)
@@ -31,7 +32,7 @@ def return_shot_and_state(DAProxy_full_path=DAProxy_full_path):
             done = 1
         except:
             print('shot info missing in log')
-            wait_while_moving_mouse(10/60,wait_for_move=2)
+            # wait_while_moving_mouse(10/60,wait_for_move=2)
     return last_pulse,MASTU_state
 
 if __name__ == '__main__':
