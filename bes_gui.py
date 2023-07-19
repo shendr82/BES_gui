@@ -399,9 +399,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             # self.swich.isChecked(False)
             self.logbook('Plasma EDGE is mesured with APDCam')
             
-    def shot_number(self):
-        shot_nr_new = shot.get_shot_number()
-        if shot_nr_new != self.shot_nr:
+    def shot_number(self, shot_nr):
+        # shot_nr_new = shot.get_shot_number()
+        if shot_nr != self.shot_nr:
             self.shot_nr = shot.get_shot_number()
             self.lcdNumber.setProperty("intValue", self.shot_nr) 
             self.logbook(f'MAST shot number: --- {self.shot_nr} ---')
@@ -447,6 +447,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def update_signal(self):
         last_pulse,MASTU_state = return_shot_and_state()
         self.shot_and_state = MASTU_state
+        # self.indicator.setText(last_pulse)
+        self.shot_number(last_pulse)
         # self.shot_and_state = 6
         self.set_indicator()
         self.shot_number()
