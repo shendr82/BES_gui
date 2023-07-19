@@ -21,7 +21,7 @@ from gui_dark_design import Ui_MainWindow
 from toggle_swich import Switch
 import rad_mot_enc_fit
 
-import mast_shot.shot_details as shot
+# import mast_shot.shot_details as shot
 from mast_shot.da_proxy import return_shot_and_state
 
 from files.read_cnf import ReadConfig
@@ -57,7 +57,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radius_calc = rad_mot_enc_fit
         
             # Indicator and Shot number from MAST
-        self.shot_nr = shot.get_shot_number()
+        # self.shot_nr = shot.get_shot_number()
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_signal)
         self.timer.start(10000)  # 10 seconds interval
@@ -402,7 +402,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def shot_number(self, shot_nr):
         # shot_nr_new = shot.get_shot_number()
         if shot_nr != self.shot_nr:
-            self.shot_nr = shot.get_shot_number()
+            self.shot_nr = shot_nr
             self.lcdNumber.setProperty("intValue", self.shot_nr) 
             self.logbook(f'MAST shot number: --- {self.shot_nr} ---')
         
