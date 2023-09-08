@@ -998,7 +998,7 @@ class Ui_MainWindow(object):
         self.label_31.setText(_translate("MainWindow", "[0.7 - 1.6] s"))
         self.label_33.setText(_translate("MainWindow", "MAST Trigger:"))
         self.label_30.setText(_translate("MainWindow", "[°C]"))
-        self.label_32.setText(_translate("MainWindow", "[20 - 60] °C"))
+        self.label_32.setText(_translate("MainWindow", "[20 - 85] °C"))
         self.label_35.setText(_translate("MainWindow", "[ms]"))
         self.label_27.setText(_translate("MainWindow", "Unit"))
         self.label_11.setText(_translate("MainWindow", "Filter temperature:"))
