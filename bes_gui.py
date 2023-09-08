@@ -65,8 +65,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             # File menu button actions
         self.actionOpen_cnf_file.triggered.connect(lambda: self.open_cnf())
         self.actionOpen_cnf_file.setShortcut('Ctrl+O')
-        self.actionSave_datapath.triggered.connect(lambda: self.save_datapath())
-        self.actionSave_datapath.setShortcut('Ctrl+S')
+        self.actionSave_Datapath.triggered.connect(lambda: self.save_datapath())
+        self.actionSave_Datapath.setShortcut('Ctrl+S')
         self.actionExit_GUI.triggered.connect(lambda: self.close())
         self.actionExit_GUI.setShortcut('Ctrl+Q')        
         
@@ -127,6 +127,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             temp = eval(self.temp_line.text())
             trig_delay = eval(self.trigger_line.text())
             clock = self.clock_combo.currentText()
+            stream_if = self.stream_combo.currentText()
             
             radius = eval(self.bes_radius_line.text())
             filter_temp = eval(self.filter_temp_line.text())
@@ -167,9 +168,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             raise Exception('Trigger delay interval error! BES_settings.cnf file not saved')
             
         if clock == 'External':
-            clock = 0
-        elif clock == 'Internal':
             clock = 1
+        elif clock == 'Internal':
+            clock = 0
         else:
             raise Exception('Clock error! Clock value is not saved')
             
@@ -208,7 +209,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
               f'Filter type: {filter_type} \n')
         
         return [duration, freq, bias_1, bias_2, temp, trig_delay, 
-                clock, filter_temp, radius, start, filter_type]
+                clock, filter_temp, radius, start, filter_type, stream_if]
     
     
     
@@ -237,14 +238,14 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 lens_encoder = lens_encoder
             if radius == 1.6:
                 lens_encoder = 0 
-            print(f'Ez a lens_motor: {lens_motor}')
-            print(f'Ez a lens_encoder: {lens_encoder}')
+            # print(f'Ez a lens_motor: {lens_motor}')
+            # print(f'Ez a lens_encoder: {lens_encoder}')
                 
             self.besStr.stepperParams[3].motor.stepsSet = round(lens_motor)
             self.besStr.stepperParams[3].encoder.stepsSet = round(lens_encoder)
             
-            print(f'Ez besStr lens stepper motor set: {self.besStr.stepperParams[3].motor.stepsSet}')
-            print(f'Ez besStr lens stepper encoder set: {self.besStr.stepperParams[3].encoder.stepsSet}')
+            # print(f'Ez besStr lens stepper motor set: {self.besStr.stepperParams[3].motor.stepsSet}')
+            # print(f'Ez besStr lens stepper encoder set: {self.besStr.stepperParams[3].encoder.stepsSet}')
             
             mirror_motor = self.radius_calc.mirror_fit(radius)[0]
             mirror_encoder = self.radius_calc.mirror_fit(radius)[5]
@@ -263,18 +264,19 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.besStr.apdParams.temperature = values[4]
             self.besStr.apdParams.trigDelay = values[5]
             self.besStr.apdParams.clkSrc = values[6]
+            self.besStr.apdParams.stream_if = values[11]
             self.besStr.apdParams.start = values[9]
             
             self.besStr.filterParams.temperature = values[7]  
             self.besStr.filterParams.type = values[10]
             
-            print(self.besStr.apdParams.rate)
-            print(self.besStr.apdParams.apd_bias1)
-            print(self.besStr.apdParams.apd_bias2)
-            print(self.besStr.apdParams.temperature)
-            print(self.besStr.apdParams.trigDelay)
-            print(self.besStr.apdParams.clkSrc)
-            print(self.besStr.filterParams.type)
+            # print(self.besStr.apdParams.rate)
+            # print(self.besStr.apdParams.apd_bias1)
+            # print(self.besStr.apdParams.apd_bias2)
+            # print(self.besStr.apdParams.temperature)
+            # print(self.besStr.apdParams.trigDelay)
+            # print(self.besStr.apdParams.clkSrc)
+            # print(self.besStr.filterParams.type)
             
             if os.path.exists(self.cnf_file):
                 print('Datapath + cnf_file: ' + self.cnf_file)
