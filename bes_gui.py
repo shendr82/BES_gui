@@ -108,7 +108,10 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def setup_datapath(self):
         try:            
             self.logbook("Reading datapath: ")
-            thisdir = os.path.dirname(os.path.realpath('files\\BES_settins.cnf'))
+            if sys.platform == 'win32':
+                thisdir = os.path.dirname(os.path.realpath('files\\BES_settins.cnf'))
+            elif (sys.platform == "linux") or (sys.platform == "linux2"):
+                thisdir = os.path.dirname(os.path.realpath('BES_settins.cnf'))          
             self.logbook("Datapath: " + thisdir)
             print(f'Current set datapath: {thisdir}')
      
@@ -360,7 +363,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # os.startfile(file)
         if sys.platform == 'win32':
             os.startfile(file)
-        elif sys.platform == "linux" or sys.platform == "linux2":
+        elif (sys.platform == "linux") or (sys.platform == "linux2"):
+            file = 'BES_settings.cnf'
             subprocess.call(['xdg-open', file])
         self.logbook(f'BES_settings.cnf file is opened: -- {file} --')
         
