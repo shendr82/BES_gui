@@ -365,7 +365,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             os.startfile(file)
         elif (sys.platform == "linux") or (sys.platform == "linux2"):
             file = os.path.join(self.datapath, 'BES_settings.cnf')
-            subprocess.call(['open', file])
+            subprocess.call(['gedit', file])
         self.logbook(f'BES_settings.cnf file is opened: -- {file} --')
         
     def save_datapath(self):
@@ -395,7 +395,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             os.startfile(file)
         elif sys.platform == "linux" or sys.platform == "linux2":
             file = os.path.join(self.datapath, file)
-            subprocess.call(['open', file])
+            subprocess.call(['gedit', file])
             
     def edge_core_switch(self, filter_type):
         filter_type = filter_type
