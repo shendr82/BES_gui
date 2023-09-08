@@ -111,7 +111,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             if sys.platform == 'win32':
                 thisdir = os.path.dirname(os.path.realpath('files\\BES_settins.cnf'))
             elif (sys.platform == "linux") or (sys.platform == "linux2"):
-                thisdir = os.path.dirname(os.path.realpath('BES_settins.cnf'))          
+                thisdir = '/home/muadmin/BES_DATAC/BES/xbt_test/'          
             self.logbook("Datapath: " + thisdir)
             print(f'Current set datapath: {thisdir}')
      
@@ -177,7 +177,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             raise Exception('Clock error! Clock value is not saved')
             
-        if 20 <= filter_temp <= 60:
+        if 20 <= filter_temp <= 85:
             filter_temp = filter_temp
         else:
             raise Exception('Filter temperature interval error! BES_settings.cnf file not saved')
