@@ -28,7 +28,8 @@ class WriteConfig:
                 Setup.write("APD_BIAS_2 {}\n".format(besStr.apdParams.apd_bias2))
                 Setup.write("TEMPERATURE {}\n".format(besStr.apdParams.temperature))
                 Setup.write("APD_TRIG_DELAY {}\n".format(besStr.apdParams.trigDelay))
-                Setup.write("CLK_SRC {}\n\n".format(besStr.apdParams.clkSrc))
+                Setup.write("CLK_SRC {}\n".format(besStr.apdParams.clkSrc))
+                Setup.write("STREAM_IF {}\n\n".format(besStr.apdParams.stream_if))
 
                 Setup.write("STEPPER_MIRROR\n\n")
                 Setup.write("VIEW_RADIUS {}\n".format(besStr.stepperParams[0].viewRadius))
@@ -83,23 +84,6 @@ class WriteConfig:
                 Setup.write("E_STEPS_INIT {}\n".format(besStr.stepperParams[2].encoder.stepsInit))
                 Setup.write("E_STEPS_RATIO {}\n".format(besStr.stepperParams[2].encoder.stepsRatio))
                 Setup.write("E_STEPS_OFFSET {}\n\n".format(besStr.stepperParams[2].encoder.stepsOffset))
-
-                Setup.write("STEPPER_LENS\n\n")
-                Setup.write("M_STEPS_SET {}\n".format(besStr.stepperParams[3].motor.stepsSet))
-                Setup.write("M_STEPS_INIT {}\n".format(besStr.stepperParams[3].motor.stepsInit))
-                Setup.write("M_MAX_SPEED {}\n".format(besStr.stepperParams[3].motor.maxSpeed))
-                Setup.write("M_HOLD_CURRENT {}\n".format(besStr.stepperParams[3].motor.holdCurrent))
-                Setup.write("M_TIMEOUT {}\n".format(besStr.stepperParams[3].motor.timeOut))
-                Setup.write("M_LIMIT_LOW {}\n".format(besStr.stepperParams[3].motor.limitLow))
-                Setup.write("M_LIMIT_HIGH {}\n".format(besStr.stepperParams[3].motor.limitHigh))
-                Setup.write("M_STEPS_PER_DEGREE {}\n".format(besStr.stepperParams[3].motor.stepsPerDegree))
-                Setup.write("M_STEPS_OFFSET {}\n\n".format(besStr.stepperParams[3].motor.stepsOffset))
-
-                Setup.write("E_STEPS_TOLERANCE {}\n".format(besStr.stepperParams[3].encoder.tolerance))
-                Setup.write("E_STEPS_SET {}\n".format(besStr.stepperParams[3].encoder.stepsSet))
-                Setup.write("E_STEPS_INIT {}\n".format(besStr.stepperParams[3].encoder.stepsInit))
-                Setup.write("E_STEPS_RATIO {}\n".format(besStr.stepperParams[3].encoder.stepsRatio))
-                Setup.write("E_STEPS_OFFSET {}\n\n".format(besStr.stepperParams[3].encoder.stepsOffset))
 
                 Setup.write("STEPPER_LENS\n\n")
                 Setup.write("M_STEPS_SET {}\n".format(besStr.stepperParams[3].motor.stepsSet))
