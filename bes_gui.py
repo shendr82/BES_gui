@@ -51,8 +51,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.directory = ''
         self.cnf_file = os.path.join(self.datapath, 'BES_settings.cnf')
         # self.cnf_file = 'BES_settings.cnf'
-        self.cnf_default_file = os.path.join(self.datapath, 'BES_default_settings.cnf')
-        self.cnf_test_file = os.path.join(self.datapath, 'BES_settings_test.cnf')
+        self.cnf_default_file = os.path.join(os.getcwd(), 'files', 'BES_default_settings.cnf')
+        self.cnf_test_file = os.path.join(os.getcwd(), 'files', 'BES_settings_test.cnf')
         self.besStr = self.load_cnf()     
         self.radius_calc = rad_mot_enc_fit
         
@@ -109,7 +109,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         try:            
             self.logbook("Reading datapath: ")
             if sys.platform == 'win32':
-                thisdir = os.path.dirname(os.path.realpath('files\\BES_settins.cnf'))
+                files = 'files'
+                directory = os.getcwd()
+                thisdir = os.path.join(directory, files)
             elif (sys.platform == "linux") or (sys.platform == "linux2"):
                 thisdir = '/home/muadmin/BES_DATAC/BES/xbt_test/'          
             self.logbook("Datapath: " + thisdir)
@@ -273,14 +275,6 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.besStr.filterParams.temperature = values[7]  
             self.besStr.filterParams.type = values[10]
             
-            # print(self.besStr.apdParams.rate)
-            # print(self.besStr.apdParams.apd_bias1)
-            # print(self.besStr.apdParams.apd_bias2)
-            # print(self.besStr.apdParams.temperature)
-            # print(self.besStr.apdParams.trigDelay)
-            # print(self.besStr.apdParams.clkSrc)
-            # print(self.besStr.filterParams.type)
-            
             if os.path.exists(self.cnf_file):
                 print('Datapath + cnf_file: ' + self.cnf_file)
                 WriteConfig(self.cnf_file).writeFile(self.besStr)
@@ -296,11 +290,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # Loading parameter values from BES_settings.cnf file
     def load_cnf(self):
         try:
-            file = 'files\\BES_settings.cnf'
-            if os.path.isfile(file) == False:
+            file = 'BES_settings.cnf'
+            datapath = self.datapath
+            path = os.path.join(datapath, file)
+            if os.path.isfile(path) == False:
                 file = 'BES_default_settings.cnf'
                 self.logbook('Error message:', text_color="#ff0000")
-                self.logbook('Original BES_settings.cnfl file not found. Default parameters file is loaded.',
+                self.logbook('Original BES_settings.cnf file not found. Default parameters file is loaded.',
                              text_color=' #facb3f ')
             else:
                 print('Previous parameters are loaded\n')
@@ -359,12 +355,12 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # Run open BES_settings.cnf file
     def open_cnf(self):
-        file = 'files\\BES_settings.cnf'
+        file = os.path.join(self.datapath, 'BES_settings.cnf')
         # os.startfile(file)
         if sys.platform == 'win32':
             os.startfile(file)
         elif (sys.platform == "linux") or (sys.platform == "linux2"):
-            file = os.path.join(self.datapath, 'BES_settings.cnf')
+            # file = os.path.join(self.datapath, 'BES_settings.cnf')
             subprocess.call(['gedit', file])
         self.logbook(f'BES_settings.cnf file is opened: -- {file} --')
         
@@ -390,7 +386,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
     
         # Run open Readme.txt file
     def open_readme(self):
-        file = 'readme.txt'
+        directory = os.getcwd()
+        file = os.path.join(directory, 'readme.txt')
         if sys.platform == 'win32':
             os.startfile(file)
         elif sys.platform == "linux" or sys.platform == "linux2":
