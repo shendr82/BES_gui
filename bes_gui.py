@@ -247,6 +247,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             # print(f'Ez a lens_encoder: {lens_encoder}')
                 
             self.besStr.stepperParams[3].motor.stepsSet = round(lens_motor)
+            self.besStr.stepperParams[3].motor.limitLow = -6900
+            self.besStr.stepperParams[3].motor.limitHigh = 124000
             self.besStr.stepperParams[3].encoder.stepsSet = round(lens_encoder)
             
             # print(f'Ez besStr lens stepper motor set: {self.besStr.stepperParams[3].motor.stepsSet}')
@@ -255,12 +257,16 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             mirror_motor = self.radius_calc.mirror_fit(radius)[0]
             mirror_encoder = self.radius_calc.mirror_fit(radius)[5]
             self.besStr.stepperParams[0].motor.stepsSet = round(mirror_motor)
+            self.besStr.stepperParams[0].motor.limitLow = -2000
+            self.besStr.stepperParams[0].motor.limitHigh = 117000 
             self.besStr.stepperParams[0].encoder.stepsSet = round(mirror_encoder)
             
             camera_motor = self.radius_calc.camera_fit(radius)[0]
             camera_encoder = self.radius_calc.camera_fit(radius)[5]
-            self.besStr.stepperParams[0].motor.stepsSet = round(camera_motor)
-            self.besStr.stepperParams[0].encoder.stepsSet = round(camera_encoder)
+            self.besStr.stepperParams[1].motor.stepsSet = round(camera_motor)
+            self.besStr.stepperParams[1].motor.limitLow = -1900
+            self.besStr.stepperParams[1].motor.limitHigh = 25000
+            self.besStr.stepperParams[1].encoder.stepsSet = round(camera_encoder)
             
             self.besStr.apdParams.duration = values[0]
             self.besStr.apdParams.rate = values[1]
