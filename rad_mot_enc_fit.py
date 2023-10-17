@@ -8,7 +8,7 @@ import numpy as np
 # from numpy import arange
 #from pandas import read_csv
 from scipy.optimize import curve_fit
-# from matplotlib import pyplot
+from matplotlib import pyplot as plt
 
 
     # Polynomial function definition
@@ -75,8 +75,8 @@ def camera_fit(x=1.35):
 def lens_fit(x=1.35):
     
     # Motor
-    radius = np.array([0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6])
-    motor = np.array([123000, 123000, 100000, 80000, 60000, 50000, 42000, 35000, 15000, 0])
+    radius = np.array([0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4])
+    motor = np.array([123000, 100000, 80000, 60000, 50000, 42000, 35000])
     
     popt, _ = curve_fit(objective, radius, motor)
     a, b, c, d = popt
@@ -85,7 +85,7 @@ def lens_fit(x=1.35):
     y=value_m(x, a, b, c, d)
         
         # Encoder
-    encoder = np.array([-19680, -19680, -16002, -12803, -9601, -8002, -6720, -5599, -2401, 	0])
+    encoder = np.array([-19680, -16002, -12803, -9601, -8002, -6720, -5599])
     popt2, _ = curve_fit(objective, radius, encoder)
     e, f, g, h = popt2
     y_enc = value_m(x, e, f, g, h)
