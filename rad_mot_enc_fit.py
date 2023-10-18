@@ -8,7 +8,7 @@ import numpy as np
 # from numpy import arange
 #from pandas import read_csv
 from scipy.optimize import curve_fit
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 
     # Polynomial function definition
