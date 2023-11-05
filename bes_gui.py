@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QSystemTrayIcon
 from gui_dark_design import Ui_MainWindow
 from toggle_swich import Switch
 import rad_mot_enc_fit
+from motor_interpolation import calibration
 
 # import mast_shot.shot_details as shot
 # from mast_shot.da_proxy import return_shot_and_state
@@ -54,7 +55,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cnf_default_file = os.path.join(os.getcwd(), 'files', 'BES_default_settings.cnf')
         self.cnf_test_file = os.path.join(os.getcwd(), 'files', 'BES_settings_test.cnf')
         self.besStr = self.load_cnf()     
-        self.radius_calc = rad_mot_enc_fit
+        # self.radius_calc = rad_mot_enc_fit      # Curve fit by ShendR
+        self.radius_calc = calibration
         
             # Indicator and Shot number from MAST
         # self.shot_nr = shot.get_shot_number()
@@ -226,9 +228,32 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             now = datetime.now().isoformat(' ', 'seconds')
             radius = values[8]
             self.besStr.stepperParams[0].viewRadius = values[8]
-
-            lens_motor = self.radius_calc.lens_fit(radius)[0]
-            lens_encoder = self.radius_calc.lens_fit(radius)[5]        
+            
+                # Mirror setup
+            # mirror_motor = self.radius_calc.mirror_fit(radius)[0]
+            # mirror_encoder = self.radius_calc.mirror_fit(radius)[5]  # curve fit by ShendR
+            mirror_motor = self.radius_calc(radius)[0]
+            mirror_encoder = mirror_motor / (-28.6)
+            self.besStr.stepperParams[0].motor.stepsSet = round(mirror_motor)
+            self.besStr.stepperParams[0].motor.limitLow = -2000
+            self.besStr.stepperParams[0].motor.limitHigh = 117000 
+            self.besStr.stepperParams[0].encoder.stepsSet = round(mirror_encoder)
+            
+                # Camera setup
+            # camera_motor = self.radius_calc.camera_fit(radius)[0]
+            # camera_encoder = self.radius_calc.camera_fit(radius)[5]     # curve fit by ShendR
+            camera_motor = self.radius_calc(radius)[1]
+            camera_encoder = camera_motor / (-6.25)
+            self.besStr.stepperParams[1].motor.stepsSet = round(camera_motor)
+            self.besStr.stepperParams[1].motor.limitLow = -1900
+            self.besStr.stepperParams[1].motor.limitHigh = 25000
+            self.besStr.stepperParams[1].encoder.stepsSet = round(camera_encoder)
+            
+                # Lens setup
+            # lens_motor = self.radius_calc.lens_fit(radius)[0]
+            # lens_encoder = self.radius_calc.lens_fit(radius)[5]        # curve fit by ShendR
+            lens_motor = self.radius_calc(radius)[2]
+            lens_encoder = lens_motor / (-6.25)
             
             if lens_motor > 123000:
                 lens_motor = 123000
@@ -243,31 +268,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 lens_encoder = lens_encoder
             if radius == 1.6:
                 lens_encoder = 0 
-            # print(f'Ez a lens_motor: {lens_motor}')
-            # print(f'Ez a lens_encoder: {lens_encoder}')
                 
             self.besStr.stepperParams[3].motor.stepsSet = round(lens_motor)
             self.besStr.stepperParams[3].motor.limitLow = -6900
             self.besStr.stepperParams[3].motor.limitHigh = 124000
             self.besStr.stepperParams[3].encoder.stepsSet = round(lens_encoder)
             
-            # print(f'Ez besStr lens stepper motor set: {self.besStr.stepperParams[3].motor.stepsSet}')
-            # print(f'Ez besStr lens stepper encoder set: {self.besStr.stepperParams[3].encoder.stepsSet}')
-            
-            mirror_motor = self.radius_calc.mirror_fit(radius)[0]
-            mirror_encoder = self.radius_calc.mirror_fit(radius)[5]
-            self.besStr.stepperParams[0].motor.stepsSet = round(mirror_motor)
-            self.besStr.stepperParams[0].motor.limitLow = -2000
-            self.besStr.stepperParams[0].motor.limitHigh = 117000 
-            self.besStr.stepperParams[0].encoder.stepsSet = round(mirror_encoder)
-            
-            camera_motor = self.radius_calc.camera_fit(radius)[0]
-            camera_encoder = self.radius_calc.camera_fit(radius)[5]
-            self.besStr.stepperParams[1].motor.stepsSet = round(camera_motor)
-            self.besStr.stepperParams[1].motor.limitLow = -1900
-            self.besStr.stepperParams[1].motor.limitHigh = 25000
-            self.besStr.stepperParams[1].encoder.stepsSet = round(camera_encoder)
-            
+                # APD parameters
             self.besStr.apdParams.duration = values[0]
             self.besStr.apdParams.rate = values[1]
             self.besStr.apdParams.apd_bias1 = values[2]
