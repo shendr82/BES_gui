@@ -10,7 +10,8 @@ from scipy.interpolate import interp1d
 ### needed for making ser objects
 baudrate = 57600
 timeout = 1
-motorDict = {"1": 0, "3": 2, "4": 3, "mirror": 0, "camera": 2, "lens": 3}
+motorDict = {"1": 0, "3": 2, "4": 1, "mirror": 0, "camera": 2, "lens": 1}
+# changed motorDict fr "4" and "lens" to 1, 7sep2023
 Rarr = np.array([0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6])
 
 
@@ -103,12 +104,16 @@ def calibration(R):
     lensCal = np.array([123000, 123000, 100000, 80000, 60000,
                  50000, 42000, 35000, 15000, 0])
     if R < Rarr[0]:
-        print('R is too low (below 0.7m)')
-        print('setting R to 0.7m')
+        print('#################################')
+        print('### R is too low (below 0.7m) ###')
+        print('### setting R to 0.7m         ###')
+        print('#################################')
         R = 0.7
     elif R > Rarr[-1]:
-        print('R is too high (above 1.6m)')
-        print('setting R to 1.6m')
+        print('##################################')
+        print('### R is too high (above 1.6m) ###')
+        print('### setting R to 1.6m          ###')
+        print('##################################')
         R = 1.6
     if np.isclose(Rarr, R).any() and np.isclose(R, Rarr).any():
         ind = find_nearest(Rarr, R)
@@ -116,10 +121,10 @@ def calibration(R):
         cint = int(cameraCal[ind])
         lint = int(lensCal[ind])
     else:
-        mint = int(interp1d(Rarr, mirrorCal, kind='cubic')(R))
-        cint = int(interp1d(Rarr, cameraCal, kind='cubic')(R))
+        mint = round(interp1d(Rarr, mirrorCal, kind='cubic')(np.array([R]))[0])
+        cint = round(interp1d(Rarr, cameraCal, kind='cubic')(np.array([R]))[0])
         if R > 0.8:
-            lint = int(interp1d(Rarr, lensCal, kind='cubic')(R))
+            lint = round(interp1d(Rarr, lensCal, kind='cubic')(np.array([R]))[0])
         else:
             lint = int(lensCal[0])
     return mint, cint, lint
