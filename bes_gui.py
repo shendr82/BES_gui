@@ -159,7 +159,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             raise Exception('Bias 1 interval error! BES_settings.cnf file not saved')
             
-        if 350 <= bias_2 <= 450:
+        if 300 <= bias_2 <= 450:
             bias_2 = bias_2
         else:
             raise Exception('Bias 2 interval error! BES_settings.cnf file not saved')
