@@ -154,7 +154,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             raise Exception('Frequency (sample rate) error! BES_settings.cnf file not saved')
         
-        if 350 <= bias_1 <= 450:
+        if 300 <= bias_1 <= 450:
             bias_1 = bias_1
         else:
             raise Exception('Bias 1 interval error! BES_settings.cnf file not saved')
