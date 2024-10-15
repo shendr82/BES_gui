@@ -115,7 +115,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                 directory = os.getcwd()
                 thisdir = os.path.join(directory, files)
             elif (sys.platform == "linux") or (sys.platform == "linux2"):
-                thisdir = '/home/muadmin/BES_DATAC/BES/xbt_test/'          
+                thisdir = '/home/muadmin/BES_DATAC/BES/xbt_test/'
             self.logbook("Datapath: " + thisdir)
             print(f'Current set datapath: {thisdir}')
      
@@ -285,8 +285,17 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             self.besStr.apdParams.stream_if = values[11]
             self.besStr.apdParams.start = values[9]
             
-            self.besStr.filterParams.temperature = values[7]  
+            self.besStr.filterParams.temperature = values[7]
             self.besStr.filterParams.type = values[10]
+
+
+            # Default, non-GUI parameters. If these somehow need to be
+            # changed on a shot by shot basis, then adding GUI-specific
+            # entry fields will become necessary.
+            self.besStr.apdParams.trigSrc = 1 # 1 == HW trigger
+            self.besStr.filterParams.th_low = 0 # temp. lower limit (deg C)
+            self.besStr.filterParams.th_high = 85 # temp. upper limit (deg C)
+
             
             if os.path.exists(self.cnf_file):
                 print('Datapath + cnf_file: ' + self.cnf_file)

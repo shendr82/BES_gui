@@ -28,6 +28,7 @@ class WriteConfig:
                 Setup.write("APD_BIAS_2 {}\n".format(besStr.apdParams.apd_bias2))
                 Setup.write("TEMPERATURE {}\n".format(besStr.apdParams.temperature))
                 Setup.write("APD_TRIG_DELAY {}\n".format(besStr.apdParams.trigDelay))
+                Setup.write("APD_TRIG_SRC {}\n".format(besStr.apdParams.trigSrc))
                 Setup.write("CLK_SRC {}\n".format(besStr.apdParams.clkSrc))
                 Setup.write("STREAM_IF {}\n\n".format(besStr.apdParams.stream_if))
 
@@ -105,6 +106,8 @@ class WriteConfig:
                 Setup.write("FILTER_HEATER\n\n")
                 Setup.write("FILTER_TYPE {}\n".format(besStr.filterParams.type))
                 Setup.write("TEMPERATURE {}\n".format(besStr.filterParams.temperature))
+                Setup.write("TEMPERATURE_HIGH {}\n".format(besStr.filterParams.th_high))
+                Setup.write("TEMPERATURE_LOW {}\n".format(besStr.filterParams.th_low))
 
         except:
             error=1  #can't open config file

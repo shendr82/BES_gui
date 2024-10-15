@@ -13,6 +13,8 @@ class CnfStructure:
         def __init__(self):
             self.type = ''
             self.temperature = 0
+            self.th_low = 0
+            self.th_high = 0
 
     class Encoder:
         def __init__(self):
@@ -50,6 +52,7 @@ class CnfStructure:
             self.apd_bias2 = 0
             self.temperature = 0
             self.trigDelay = 0.0
+            self.trigSrc = 0.0
             self.clkSrc = 0
             self.stream_if = ''
 
