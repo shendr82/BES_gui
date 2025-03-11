@@ -28,11 +28,14 @@ class ReadConfig:
         self.besStr.apdParams.apd_bias2 = cfRead.readUShortValue(error, "APDCAM", "APD_BIAS_2")
         self.besStr.apdParams.temperature = cfRead.readUShortValue(error, "APDCAM", "TEMPERATURE")
         self.besStr.apdParams.trigDelay = cfRead.readDoubleValue(error, "APDCAM", "APD_TRIG_DELAY")
+        self.besStr.apdParams.trigSrc = cfRead.readDoubleValue(error, "APDCAM", "APD_TRIG_SRC")
         self.besStr.apdParams.clkSrc = cfRead.readUCharValue(error, "APDCAM", "CLK_SRC")
         self.besStr.apdParams.stream_if = cfRead.readStringValue(error, "APDCAM", "STREAM_IF")
         
         self.besStr.filterParams.type = cfRead.readStringValue(error, "FILTER_HEATER", "FILTER_TYPE")
         self.besStr.filterParams.temperature = cfRead.readUShortValue(error, "FILTER_HEATER", "TEMPERATURE")
+        self.besStr.filterParams.th_high = cfRead.readUShortValue(error, "FILTER_HEATER", "TEMPERATURE_HIGH")
+        self.besStr.filterParams.th_low = cfRead.readUShortValue(error, "FILTER_HEATER", "TEMPERATURE_LOW")
 
         self.besStr.stepperParams[0].viewRadius = cfRead.readDoubleValue(error, "STEPPER_MIRROR", "VIEW_RADIUS")
         self.besStr.stepperParams[0].mirrorAngle = cfRead.readDoubleValue(error, "STEPPER_MIRROR", "MIRROR_ANGLE")
