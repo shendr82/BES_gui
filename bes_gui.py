@@ -502,21 +502,43 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
            
     def read_log_file(self,filename='read_temperature.log'):
         with open(filename, "r") as file:
-            for line in file:
-                parts = line.strip().split()
-                if len(parts) != 2:
-                    continue  # Skip invalid lines
+            lines = file.readlines()  # Read all lines
 
-                datetime_str, temp_str = parts
-                date_parts = list(map(int, datetime_str.split("-")))
+        if not lines:
+            return None  # Return None if the file is empty
+    
+        last_line = lines[-1].strip()  # Get the last line and remove any whitespace
+        parts = last_line.split()
+    
+        if len(parts) != 2:
+            return None  # Return None if the line format is invalid
+    
+        datetime_str, temp_str = parts
+        date_parts = list(map(int, datetime_str.split("-")))
+    
+        if len(date_parts) != 6:
+            return None  # Return None if the datetime format is incorrect
+    
+        year, month, day, hour, minute, second = date_parts
+        temp = int(temp_str)
 
-                if len(date_parts) != 6:
-                    continue  # Skip invalid lines
+        return year, month, day, hour, minute, second, temp
+        # with open(filename, "r") as file:
+        #     for line in file:
+        #         parts = line.strip().split()
+        #         if len(parts) != 2:
+        #             continue  # Skip invalid lines
 
-                year, month, day, hour, minute, second = date_parts
-                temp = int(temp_str)
+        #         datetime_str, temp_str = parts
+        #         date_parts = list(map(int, datetime_str.split("-")))
 
-                return year, month, day, hour, minute, second, temp
+        #         if len(date_parts) != 6:
+        #             continue  # Skip invalid lines
+
+        #         year, month, day, hour, minute, second = date_parts
+        #         temp = int(temp_str)
+
+        #         return year, month, day, hour, minute, second, temp
             
     def start(self):
         self.MainWindow.show()
