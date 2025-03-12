@@ -21,6 +21,7 @@ from gui_dark_design import Ui_MainWindow
 from toggle_swich import Switch
 import rad_mot_enc_fit
 from motor_interpolation import calibration
+import BES_devices_switch
 
 # import mast_shot.shot_details as shot
 # from mast_shot.da_proxy import return_shot_and_state
@@ -46,6 +47,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
             # Toggle switch button
         self.swich = Switch(thumb_radius=11, track_radius=8)        
         self.gridLayout_8.addWidget(self.swich, 6, 1, 1, 1)
+        
+        # self.turn_off_script = BES_devices_switch.turn_off()
+        # self.turn_on_script = BES_devices_switch.turn_on()
         
             # Load previous parameters from last BES_settings.cnf and radius calculator function
         self.datapath = self.setup_datapath()
@@ -80,6 +84,8 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_button.clicked.connect(lambda: self.load_cnf())
         self.load_default_button.clicked.connect(lambda: self.default_val())
         self.exit_button.clicked.connect(lambda: self.close())
+        self.hardware_button.toggled.connect(self.handle_toggle)
+        # self.hardware_button.toggled.connect(lambda: BES_devices_switch.turn_on())
         
         
             # Enter pressesd actions
@@ -471,6 +477,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
                                             "}\n")
             
     def update_signal(self):
+        try:
         # last_pulse,MASTU_state = return_shot_and_state()
         # self.shot_and_state = MASTU_state
         # # self.indicator.setText(last_pulse)
@@ -478,7 +485,38 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # # self.shot_and_state = 6
         # self.set_indicator()
         # self.shot_number()
-        pass
+            year, month, day, hour, minute, second, temp = self.read_log_file('read_temperature.log')
+            self.dateTimeEdit.setDateTime(QtCore.QDateTime(QtCore.QDate(year, month, day), QtCore.QTime(hour, minute, second)))
+            self.lcdNumber_2.setProperty("intValue", temp)
+        except:
+            pass
+    
+    def handle_toggle(self, checked):
+       """Handle button toggle state"""
+       if checked:
+           BES_devices_switch.turn_on()
+           self.logbook('BES hardware is turned ON')
+       else:
+           BES_devices_switch.turn_off()
+           self.logbook('BES hardware is turned OFF')
+           
+    def read_log_file(self,filename='read_temperature.log'):
+        with open(filename, "r") as file:
+            for line in file:
+                parts = line.strip().split()
+                if len(parts) != 2:
+                    continue  # Skip invalid lines
+
+                datetime_str, temp_str = parts
+                date_parts = list(map(int, datetime_str.split("-")))
+
+                if len(date_parts) != 6:
+                    continue  # Skip invalid lines
+
+                year, month, day, hour, minute, second = date_parts
+                temp = int(temp_str)
+
+                return year, month, day, hour, minute, second, temp
             
     def start(self):
         self.MainWindow.show()
