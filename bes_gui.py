@@ -484,8 +484,9 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # self.shot_number(last_pulse)
         # # self.shot_and_state = 6
         # self.set_indicator()
-        # self.shot_number()
-            year, month, day, hour, minute, second, temp = self.read_log_file('read_temperature.log')
+            shotnum = self.read_shot_number()
+            self.lcdNumber.setProperty("intValue", shotnum) 
+            year, month, day, hour, minute, second, temp = self.read_log_file()
             self.dateTimeEdit.setDateTime(QtCore.QDateTime(QtCore.QDate(year, month, day), QtCore.QTime(hour, minute, second)))
             self.lcdNumber_2.setProperty("intValue", temp)
         except:
@@ -500,7 +501,7 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
            BES_devices_switch.turn_off()
            self.logbook('BES hardware is turned OFF')
            
-    def read_log_file(self,filename='read_temperature.log'):
+    def read_log_file(self,filename='/var/log/read_temperature.log'):
         with open(filename, "r") as file:
             lines = file.readlines()  # Read all lines
 
@@ -523,22 +524,13 @@ class BES_GUI(QtWidgets.QMainWindow, Ui_MainWindow):
         temp = int(temp_str)
 
         return year, month, day, hour, minute, second, temp
-        # with open(filename, "r") as file:
-        #     for line in file:
-        #         parts = line.strip().split()
-        #         if len(parts) != 2:
-        #             continue  # Skip invalid lines
-
-        #         datetime_str, temp_str = parts
-        #         date_parts = list(map(int, datetime_str.split("-")))
-
-        #         if len(date_parts) != 6:
-        #             continue  # Skip invalid lines
-
-        #         year, month, day, hour, minute, second = date_parts
-        #         temp = int(temp_str)
-
-        #         return year, month, day, hour, minute, second, temp
+ 
+    def read_shot_number(self,filename='/home/muadmin/temp/mast_bes-jota-dev-prev/BES/xbt.log'):
+        with open(filename, "r") as file:
+            for line in file:
+                parts = line.strip().split()
+                if parts and parts[0].isdigit():  # Check if the first part is a number
+                    return int(parts[0])  # Convert and return the shot number
             
     def start(self):
         self.MainWindow.show()
